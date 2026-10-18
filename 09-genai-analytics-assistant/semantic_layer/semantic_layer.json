@@ -1,0 +1,22 @@
+{
+  "tables": {
+    "sales": {"description": "One row per order line", "columns": ["order_id", "order_date", "customer_id", "region", "product_category", "channel", "revenue", "units"]},
+    "customers": {"description": "Customer master", "columns": ["customer_id", "segment", "email"], "pii": ["email"]}
+  },
+  "joins": {"customers": "JOIN customers c ON c.customer_id = s.customer_id"},
+  "metrics": {
+    "revenue":   {"sql": "SUM(s.revenue)", "definition": "Net revenue after discounts, in USD", "synonyms": ["revenue", "sales", "net sales", "turnover"]},
+    "units":     {"sql": "SUM(s.units)", "definition": "Units sold net of returns", "synonyms": ["units", "volume", "quantity", "units sold"]},
+    "orders":    {"sql": "COUNT(DISTINCT s.order_id)", "definition": "Number of distinct orders", "synonyms": ["orders", "order count", "number of orders"]},
+    "aov":       {"sql": "SUM(s.revenue) / COUNT(DISTINCT s.order_id)", "definition": "Average order value = revenue / orders", "synonyms": ["average order value", "aov", "avg order value"]},
+    "customers": {"sql": "COUNT(DISTINCT s.customer_id)", "definition": "Distinct customers who ordered in the period", "synonyms": ["active customers", "customers", "buyers"]}
+  },
+  "dimensions": {
+    "region":           {"sql": "s.region", "synonyms": ["region", "regions"], "values": ["North", "South", "East", "West"]},
+    "product_category": {"sql": "s.product_category", "synonyms": ["product category", "category", "categories", "product line"], "values": ["Hardware", "Software", "Services"]},
+    "channel":          {"sql": "s.channel", "synonyms": ["channel", "channels", "sales channel"], "values": ["Online", "Retail", "Partner"]},
+    "segment":          {"sql": "c.segment", "join": "customers", "synonyms": ["segment", "segments", "customer segment"], "values": ["SMB", "Mid-Market", "Enterprise"]},
+    "month":            {"sql": "strftime('%Y-%m', s.order_date)", "synonyms": ["month", "monthly", "by month"]}
+  },
+  "time": {"reference_date": "2026-07-15", "fiscal_year_start_month": 1}
+}
