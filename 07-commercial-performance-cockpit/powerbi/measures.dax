@@ -1,0 +1,33 @@
+// Core measures for the Commercial Performance Cockpit
+Net Revenue = SUM ( FACT_SALES[net_amount] )
+Target = SUM ( FACT_TARGET[target_amount] )
+Target Attainment % = DIVIDE ( [Net Revenue], [Target] )
+Net Revenue LY = CALCULATE ( [Net Revenue], SAMEPERIODLASTYEAR ( DIM_DATE[date] ) )
+YoY Growth % = DIVIDE ( [Net Revenue] - [Net Revenue LY], [Net Revenue LY] )
+Gross Margin = [Net Revenue] - SUM ( FACT_SALES[std_cogs] )
+Gross Margin % = DIVIDE ( [Gross Margin], [Net Revenue] )
+
+// Price / volume effects at product level, summed
+Price Effect =
+SUMX (
+    VALUES ( DIM_PRODUCT[product_id] ),
+    VAR q1 = CALCULATE ( SUM ( FACT_SALES[qty] ) )
+    VAR p1 = DIVIDE ( [Net Revenue], q1 )
+    VAR q0 = CALCULATE ( SUM ( FACT_SALES[qty] ), SAMEPERIODLASTYEAR ( DIM_DATE[date] ) )
+    VAR p0 = DIVIDE ( [Net Revenue LY], q0 )
+    RETURN IF ( q0 > 0 && q1 > 0, ( p1 - p0 ) * q1 )
+)
+Volume Effect =
+SUMX (
+    VALUES ( DIM_PRODUCT[product_id] ),
+    VAR q1 = CALCULATE ( SUM ( FACT_SALES[qty] ) )
+    VAR q0 = CALCULATE ( SUM ( FACT_SALES[qty] ), SAMEPERIODLASTYEAR ( DIM_DATE[date] ) )
+    VAR p0 = DIVIDE ( [Net Revenue LY], q0 )
+    RETURN ( q1 - q0 ) * p0
+)
+
+Weighted Pipeline = SUMX ( FACT_PIPELINE, FACT_PIPELINE[amount] * RELATED ( DIM_STAGE[probability] ) )
+Pipeline Coverage = DIVIDE ( [Weighted Pipeline], [Target] - [Net Revenue] )
+
+// RLS rule on SEC_USER_GEO table
+// [user_email] = USERPRINCIPALNAME ()
