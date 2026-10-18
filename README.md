@@ -63,7 +63,7 @@ Power Apps / Power Automate, SharePoint.
 
 ## Contact
 
-**Nitin Lokhande** · GitHub: [NitinLokhande42](https://github.com/NitinLokhande42) · LinkedIn: *add link* · Email: *add email*
+**Nitin Lokhande** · GitHub: [NitinLokhande42](https://github.com/NitinLokhande42) · LinkedIn: [nitin-lokhande-29428589](https://www.linkedin.com/in/nitin-lokhande-29428589/) · Email: [007nitin.lokhande@gmail.com](mailto:007nitin.lokhande@gmail.com)
 
 ## Publishing this repo to GitHub
 
