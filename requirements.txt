@@ -1,0 +1,7 @@
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+statsmodels>=0.14
+# optional: used by project 06 when installed, otherwise falls back to scikit-learn
+xgboost>=2.0 ; python_version >= "3.9"

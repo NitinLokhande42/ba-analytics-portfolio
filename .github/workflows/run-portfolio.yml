@@ -1,0 +1,13 @@
+name: run-portfolio
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt pytest
+      - run: python run_all.py
+      - run: pytest 11-territory-incentive-optimization/tests -q
